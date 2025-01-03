@@ -96,27 +96,32 @@ def fetch_trending_topics():
         driver.get("https://x.com/i/flow/login")
 
         # Use WebDriverWait for username and password fields 
-        # (These selectors might need to be adjusted based on the latest x.com page structure)
         username_field = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, "input[name='text']")) 
         )
+        username_field.send_keys(TWITTER_USERNAME)
+
+        next_button = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, "//span[contains(text(),'Next')]")) 
+        )
+        next_button.click()
+
         password_field = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='password']")) 
         )
-
-        username_field.send_keys(TWITTER_USERNAME)
         password_field.send_keys(TWITTER_PASSWORD)
-        password_field.submit()
 
-        # Wait for successful login (adjust selector as needed)
-        WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.ID, "profile-link")) 
+        log_in_button = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, "//span[contains(text(),'Log in')]")) 
         )
+        log_in_button.click()
 
         driver.get("https://twitter.com/home")
 
-        # Find trending topics (adjust selector as needed)
-        trends = driver.find_elements(By.CSS_SELECTOR, '.css-175oi2r')[:5] 
+        # Find trending topics 
+        trends = WebDriverWait(driver, 10).until(
+            EC.presence_of_all_elements_located((By.CSS_SELECTOR, '.css-175oi2r')) 
+        )[:5]
         trend_names = [trend.text for trend in trends]
 
         ip_address = requests.get("https://api.ipify.org").text
