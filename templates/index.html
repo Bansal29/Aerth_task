@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trending Topics</title>
+  </head>
+  <body>
+    <h1>Trending Topics on Twitter</h1>
+    <button onclick="runScript()">Click here to run the script</button>
+    <pre id="result"></pre>
+
+    <script>
+      function runScript() {
+        fetch("/run-script")
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById("result").innerText = JSON.stringify(
+              data,
+              null,
+              2
+            );
+          });
+      }
+    </script>
+  </body>
+</html>
